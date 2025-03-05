@@ -198,9 +198,13 @@ const LeafletLiveTracking: React.FC = () => {
 
   useEffect(() => {
     if (userCoords !== null && endCoords !== null) {
+      console.log(endCoords, 'endCoords');
+      console.log(userCoords, 'userCoords');
       setRoutingKey((prevKey) => prevKey + 1);
     }
   }, [userCoords, endCoords]);
+
+
 
   return (
     <MapContainer center={[27.7172, 85.324]} zoom={13} style={{ height: "100vh", width: "100%" }}>

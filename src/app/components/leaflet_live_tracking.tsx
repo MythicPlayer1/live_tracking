@@ -196,6 +196,12 @@ const LeafletLiveTracking: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (userCoords !== null && endCoords !== null) {
+      setRoutingKey((prevKey) => prevKey + 1);
+    }
+  }, [userCoords, endCoords]);
+
   return (
     <MapContainer center={[27.7172, 85.324]} zoom={13} style={{ height: "100vh", width: "100%" }}>
       <TileLayer minZoom={1} url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

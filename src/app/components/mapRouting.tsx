@@ -26,10 +26,11 @@ const createRoutineMachineLayer = ({ position, start, end, color }) => {
       ],
     },
     showAlternatives: true,
-    waypointMode: "snap",
+    waypointMode: "connect",
     routeWhileDragging: true,
   });
 
+console.log("instance", instance);
   return instance;
 };
 const RoutingMachine = createControlComponent(createRoutineMachineLayer);

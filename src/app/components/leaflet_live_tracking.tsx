@@ -38,7 +38,8 @@ const LeafletLiveTracking: React.FC = () => {
   const [userCoords, setUserCoords] = useState<Coords | null>(null);
   const [users] = useState<User[]>([]);
   const [endCoords, setEndCoords] = useState<Coords | null>(null);
-  const [routingKey, setRoutingKey] = useState(0);
+  const [, setRoutingKey] = useState(0);
+  const routingControlRef = useRef<L.Routing.Control | null>(null);
 
   const takeEndCoords = (coords: [number, number]) => {
     setEndCoords({ lat: coords[0], lng: coords[1] });
@@ -60,6 +61,12 @@ const LeafletLiveTracking: React.FC = () => {
           }).then((resp) => {
             console.log(resp);
           });
+          if (routingControlRef.current) {
+            routingControlRef.current.setWaypoints([
+              L.latLng(latitude, longitude),
+              L.latLng(endCoords?.lat || latitude, endCoords?.lng || longitude),
+            ]);
+          }
         },
         (error) => console.error("Geolocation error:", error),
         { enableHighAccuracy: true }
@@ -71,8 +78,6 @@ const LeafletLiveTracking: React.FC = () => {
 
   useEffect(() => {
     if (userCoords !== null && endCoords !== null) {
-      console.log(endCoords, 'endCoords');
-      console.log(userCoords, 'userCoords');
       setRoutingKey((prevKey) => prevKey + 1);
     }
   }, [userCoords, endCoords]);
@@ -87,7 +92,13 @@ const LeafletLiveTracking: React.FC = () => {
         <Marker key={user.name} position={[user.location.latitude, user.location.longitude]} icon={userIcon} />
       ))}
       {userCoords !== null && endCoords !== null && (
-        <RoutingControl position={"topleft"} start={[userCoords.lat, userCoords.lng]} end={[endCoords.lat, endCoords.lng]} color={"green"} key={routingKey} />
+        <RoutingControl 
+        position={"topleft"} 
+        start={[userCoords.lat, userCoords.lng]} 
+        end={[endCoords.lat, endCoords.lng]} 
+        color={"green"} 
+        ref={routingControlRef}
+         />
       )}
 
       <LeafletDestinationgeoSearch setCoords={takeEndCoords} />
